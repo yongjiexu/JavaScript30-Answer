@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drum Kit</title>
+</head>
+<style>
+    html, body {
+        height: 100%;
+    }
+
+    .background-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        height: 100%;
+        background-image: url("http://i.imgur.com/b9r5sEL.jpg");
+        background-size: cover;
+    }
+
+    .keyboard {
+        /*outline: 1px solid red;*/
+    }
+
+    .key {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        margin-left: 20px;
+        color: #ffffff;
+        transition: transform 0.1s;
+        border: 2px solid black;
+
+    }
+
+    .hitted {
+        border: 2px solid yellow;
+        transform: scale(1.4);
+    }
+</style>
+<body>
+<div class="background-img">
+    <div class="keyboard">
+        <div class="key">a</div>
+        <div class="key">S</div>
+        <div class="key">D</div>
+        <div class="key">F</div>
+        <div class="key">G</div>
+        <div class="key">H</div>
+        <div class="key">J</div>
+        <div class="key">K</div>
+        <div class="key">L</div>
+    </div>
+    <audio src="./sounds/boom.wav" data-key="a"></audio>
+    <audio src="./sounds/clap.wav" data-key="s"></audio>
+    <audio src="./sounds/hihat.wav" data-key="d"></audio>
+    <audio src="./sounds/kick.wav" data-key="f"></audio>
+    <audio src="./sounds/openhat.wav" data-key="g"></audio>
+    <audio src="./sounds/ride.wav" data-key="h"></audio>
+    <audio src="./sounds/snare.wav" data-key="j"></audio>
+    <audio src="./sounds/tink.wav" data-key="k"></audio>
+    <audio src="./sounds/tom.wav" data-key="l"></audio>
+</div>
+<script>
+  /*
+  击键 -> 发声 && 对应字母高亮 ----声音消失 && 高亮消失
+   */
+  function handleTransitionEnd(e) {
+    e.target.classList.remove('hitted')
+    keyBoardDom.removeEventListener('transitionend', handleTransitionEnd)
+  }
+
+  let keyBoardDom = document.querySelector('.keyboard')
+
+  let audioArr = Array.prototype.slice.call(document.querySelectorAll('audio'))
+  let keyArr = Array.prototype.slice.call(document.querySelectorAll('.key'))
+  console.log(audioArr)
+  window.addEventListener('keydown', (e) => {
+    let needPlayMusic = audioArr.filter((audio) => {
+      return audio.dataset.key === e.key
+    })[0]
+    let needHighlightedDom = keyArr.filter((keyDom) => {
+      return keyDom.innerText === e.key.toUpperCase()
+    })[0]
+    if (!needHighlightedDom) {
+      return
+    }
+    keyBoardDom.addEventListener('transitionend', handleTransitionEnd)
+    needPlayMusic.currentTime = 0
+    needPlayMusic.play()
+    needHighlightedDom.classList.add('hitted')
+  }, false)
+</script>
+<script>
+    // todo 我的代码水平和作者比差距很大，多练、多思考、多总结。找到一个合理的处理问题的流程很重要。
+    // 坚持做下去就好
+  function playSound(e) {
+
+  }
+
+  function removeClass(e){
+
+  }
+
+  window.addEventListener('keydown', playSound)
+  let keyArr = Array.from(document.querySelectorAll('.key'))
+  keyArr.forEach((ele, index) => {
+    ele.addEventListener('transitionend',removeClass)
+  })
+</script>
+</body>
+</html>
